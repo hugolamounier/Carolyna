@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import * as yup from "yup";
-import mysql, {ResultSetHeader} from "mysql2/promise";
+import mysql, {ResultSetHeader, RowDataPacket} from "mysql2/promise";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import cors from "cors";
@@ -76,6 +76,48 @@ app.delete("/usuario/:id", async (req: Request, res: Response) => {
     }
   } catch (err) {
     res.status(500).json({ message: "Erro ao deletar usuário", error: err });
+  }
+});
+
+app.get("/usuario/:id", async (req: Request, res: Response) => {
+  try {
+    const [rows] = await db.execute<RowDataPacket[]>("SELECT * FROM users WHERE id = ?", [req.params.id]);
+    if (rows.length === 0) {
+      res.status(404).json({ message: "Nenhum usuário encontrado" });
+    } else {
+      res.status(200).json(rows);
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Erro ao buscar usuário", error: err });
+  }
+});
+
+app.put("/usuario/:id", async (req: Request, res: Response) => {
+  try {
+    const validData = await signUpSchema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    const hashPassword = await bcrypt.hash(req.body.senha, 10);
+
+    const [result] = await db.execute<ResultSetHeader>(
+        "UPDATE users SET nome = ?, dataNascimento = ?, nomeMae = ?, senha = ? WHERE id = ?",
+        [
+          validData.nome,
+          validData.dataNascimento,
+          validData.nomeMae,
+          hashPassword,
+          req.params.id,
+        ],
+    );
+
+    if (result.affectedRows === 0) {
+      res.status(404).json({ message: "Usuário não encontrado" });
+    } else {
+      res.status(200).json({ message: "Usuário atualizado com sucesso", data: validData });
+    }
+  } catch (err: any) {
+    res.status(400).json({ message: "Erro de validação", errors: err.errors});
   }
 });
 
