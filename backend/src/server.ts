@@ -10,7 +10,11 @@ import bcrypt from "bcryptjs";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: '*',
+  allowedHeaders: '*',
+}));
 app.use(bodyParser.json());
 
 const port = process.env.PORT;
