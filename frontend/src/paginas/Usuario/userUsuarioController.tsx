@@ -1,5 +1,10 @@
+import { Usuario } from "../../tipos/Usuario";
+import { useNavigate } from "react-router-dom";
+
 interface IUsuarioController {
   onSubmit: (values: FormData) => Promise<void>;
+  getUsuario: (id: string) => Promise<Usuario | undefined>;
+  deleteUsuario: (id: string) => Promise<void>;
 }
 
 export interface FormData {
@@ -12,9 +17,11 @@ export interface FormData {
 }
 
 const useUsuarioController = (): IUsuarioController => {
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const navigate = useNavigate();
 
   const onSubmit = async (values: FormData) => {
+    console.log(12323213);
     try {
       const response = await fetch(`${apiUrl}/usuario/criar`, {
         method: "POST",
@@ -26,7 +33,8 @@ const useUsuarioController = (): IUsuarioController => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Form submitted successfully:", data);
+        console.log(data);
+        navigate(`/usuario/${data.data}`);
       } else {
         const errorData = await response.json();
         console.error("Validation errors:", errorData.errors);
@@ -36,7 +44,33 @@ const useUsuarioController = (): IUsuarioController => {
     }
   };
 
-  return { onSubmit };
+  const getUsuario = async (id: string): Promise<Usuario | undefined> => {
+    const response = await fetch(`${apiUrl}/usuario/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+
+      return data[0];
+    }
+
+    return undefined;
+  };
+
+  const deleteUsuario = async (id: string) => {
+    await fetch(`${apiUrl}/usuario/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  return { onSubmit, getUsuario, deleteUsuario };
 };
 
 export default useUsuarioController;
