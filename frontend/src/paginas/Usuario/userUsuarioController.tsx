@@ -14,6 +14,9 @@ export interface FormData {
 const useUsuarioController = (): IUsuarioController => {
   const apiUrl = process.env.REACT_APP_API_URL;
 
+  console.log(apiUrl);
+  console.log(process.env);
+
   const onSubmit = async (values: FormData) => {
     try {
       const response = await fetch(`${apiUrl}/usuario/criar`, {

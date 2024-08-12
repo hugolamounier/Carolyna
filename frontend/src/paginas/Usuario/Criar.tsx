@@ -44,7 +44,7 @@ const CriarUsuario = (): ReactElement => {
       .max(30, "A senha deve ter no máximo 30 caracteres"),
     confirmarSenha: yup
       .string()
-      .oneOf([yup.ref("password")], "As senhas não conferem")
+      .oneOf([yup.ref("senha")], "As senhas não conferem")
       .required("A confirmação de senha é obrigatória"),
   });
 
