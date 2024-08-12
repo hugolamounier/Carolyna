@@ -13,10 +13,10 @@ app.use(express.json())
 const port = process.env.PORT || 5000;
 
 const db = mysql.createPool({
-  host: process.env.MYSQL_HOST || "localhost",
-  user: process.env.MYSQL_USER || "server",
-  password: process.env.MYSQL_PASSWORD || "123teste",
-  database: process.env.MYSQL_DATABASE || "testedb",
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 const signUpSchema = yup.object().shape({
