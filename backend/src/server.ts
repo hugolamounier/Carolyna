@@ -10,13 +10,13 @@ dotenv.config();
 const app = express();
 app.use(express.json())
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 const db = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
+  host: process.env.MYSQL_HOST || "localhost",
+  user: process.env.MYSQL_USER || "server",
+  password: process.env.MYSQL_PASSWORD || "123teste",
+  database: process.env.MYSQL_DATABASE || "testedb",
 });
 
 const signUpSchema = yup.object().shape({
@@ -36,9 +36,9 @@ app.post("/usuario/criar", async (req: Request, res: Response) => {
       abortEarly: false,
     });
 
-    const hashPassword = await bcrypt.hash(req.body.password, 10);
+    const hashPassword = await bcrypt.hash(validData.senha, 10);
 
-    const [result] = await db.execute(
+    const [result] = await db.execute<mysql.ResultSetHeader>(
       "INSERT INTO users (nome, dataNascimento, nomeMae, senha) VALUES (?, ?, ?, ?)",
       [
         validData.nome,
@@ -50,12 +50,9 @@ app.post("/usuario/criar", async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ message: "Cadastro realizado com sucesso!", data: validData });
+      .json({ message: "Cadastro realizado com sucesso!", data:  result.insertId });
   } catch (err: any) {
-    res.status(400).json({
-      message: "Erro de validação",
-      errors: err.errors,
-    });
+    res.status(400).json(err);
   }
 });
 
