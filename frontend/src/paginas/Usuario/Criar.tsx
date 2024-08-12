@@ -4,10 +4,8 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   Container,
   CssBaseline,
-  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
@@ -17,8 +15,10 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import * as yup from "yup";
+import useUsuarioController, { FormData } from "./userUsuarioController";
 
 const CriarUsuario = (): ReactElement => {
+  const { onSubmit } = useUsuarioController();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -48,11 +48,7 @@ const CriarUsuario = (): ReactElement => {
       .required("A confirmação de senha é obrigatória"),
   });
 
-  const onSubmit = (values: any) => {
-    console.log("Form submitted with values:", values);
-  };
-
-  const validate = (values: any) => {
+  const validate = (values: FormData) => {
     try {
       validationSchema.validateSync(values, { abortEarly: false });
       return {};
