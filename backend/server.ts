@@ -4,6 +4,10 @@ import cors from "cors";
 import * as yup from "yup";
 import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file if present
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -11,12 +15,12 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 5000;
 
-// MySQL connection setup
+// MySQL connection setup using environment variables
 const db = mysql.createPool({
-  host: "localhost",
-  user: "your_username",
-  password: "your_password",
-  database: "your_database",
+  host: process.env.MYSQL_HOST || "localhost",
+  user: process.env.MYSQL_USER || "your_username",
+  password: process.env.MYSQL_PASSWORD || "your_password",
+  database: process.env.MYSQL_DATABASE || "your_database",
 });
 
 // Validation schema using yup
