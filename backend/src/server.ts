@@ -1,6 +1,4 @@
 import express, { Request, Response } from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
 import * as yup from "yup";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
@@ -10,12 +8,7 @@ import bcrypt from "bcryptjs";
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: '*',
-  methods: '*',
-  allowedHeaders: '*',
-}));
-app.use(bodyParser.json());
+app.use(express.json())
 
 const port = process.env.PORT;
 
