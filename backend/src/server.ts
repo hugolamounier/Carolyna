@@ -28,9 +28,6 @@ const signUpSchema = yup.object().shape({
     .string()
     .required()
     .oneOf([yup.ref("senha"), null], "As senhas não conferem"),
-  aceiteTermos: yup
-    .boolean()
-    .oneOf([true], "Você deve aceitar os termos de uso"),
 });
 
 app.post("usuario/criar", async (req: Request, res: Response) => {
