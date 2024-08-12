@@ -2,9 +2,9 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import * as yup from "yup";
-import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 
 // Load environment variables
 dotenv.config();
@@ -42,7 +42,7 @@ app.post("/criar", async (req: Request, res: Response) => {
       abortEarly: false,
     });
 
-    const hashedPassword = await bcrypt.hash(validData.senha, 10);
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
 
     const [result] = await db.execute(
       "INSERT INTO users (nome, dataNascimento, nomeMae, senha) VALUES (?, ?, ?, ?)",
@@ -50,7 +50,7 @@ app.post("/criar", async (req: Request, res: Response) => {
         validData.nome,
         validData.dataNascimento,
         validData.nomeMae,
-        hashedPassword,
+        hashPassword,
       ],
     );
 
