@@ -11,8 +11,6 @@ services:
     restart: always
     environment:
       REACT_APP_API_URL: http://localhost:5000
-    networks:
-      - app-network
     depends_on:
       - backend
 
@@ -29,8 +27,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-    networks:
-      - app-network
 
   backend:
     container_name: backend
@@ -45,11 +41,6 @@ services:
       - "5000:5000"
     depends_on:
       - mysql
-    networks:
-      - app-network
 
 volumes:
   mysql_data:
-
-networks:
-  app-network:

@@ -19,6 +19,9 @@ app.use(express.json())
 
 const port = process.env.PORT || 5000;
 
+console.log(process.env);
+console.log(process.env.MYSQL_HOST);
+
 const db = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
