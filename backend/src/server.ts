@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import * as yup from "yup";
-import mysql from "mysql2/promise";
+import mysql, {ResultSetHeader} from "mysql2/promise";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import cors from "cors";
@@ -48,7 +48,7 @@ app.post("/usuario/criar", async (req: Request, res: Response) => {
 
     const hashPassword = await bcrypt.hash(validData.senha, 10);
 
-    const [result] = await db.execute<mysql.ResultSetHeader>(
+    const [result] = await db.execute<ResultSetHeader>(
       "INSERT INTO users (nome, dataNascimento, nomeMae, senha) VALUES (?, ?, ?, ?)",
       [
         validData.nome,
@@ -65,6 +65,20 @@ app.post("/usuario/criar", async (req: Request, res: Response) => {
     res.status(400).json(err);
   }
 });
+
+app.delete("/usuario/:id", async (req: Request, res: Response) => {
+  try {
+    const [result] = await db.execute<ResultSetHeader>("DELETE FROM users WHERE id = ?", [req.params.id]);
+    if (result.affectedRows === 0) {
+      res.status(404).json({ message: "Usuário não encontrado" });
+    } else {
+      res.status(200).json({ message: "Usuário deletado com sucesso" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Erro ao deletar usuário", error: err });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

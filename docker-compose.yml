@@ -32,7 +32,7 @@ services:
     container_name: backend
     build: ./backend
     environment:
-      MYSQL_HOST: localhost
+      MYSQL_HOST: mysql
       MYSQL_USER: server
       MYSQL_PASSWORD: 123teste
       MYSQL_DATABASE: testedb
