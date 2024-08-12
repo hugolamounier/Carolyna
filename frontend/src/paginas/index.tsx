@@ -1,7 +1,11 @@
-import {ReactElement} from "react";
+import { useNavigate } from "react-router-dom";
 
-const Index = (): ReactElement => {
-return <div>Hello World</div>;
-}
+const Index = () => {
+  const navigate = useNavigate();
+
+  navigate("/usuario/criar");
+
+  return null;
+};
 
 export default Index;

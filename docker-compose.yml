@@ -11,7 +11,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root123teste
-      MYSQL_DATABASE: testdb
+      MYSQL_DATABASE: testedb
       MYSQL_USER: server
       MYSQL_PASSWORD: 123teste
     ports:
@@ -26,7 +26,8 @@ services:
       MYSQL_HOST: mysql
       MYSQL_USER: server
       MYSQL_PASSWORD: 123teste
-      MYSQL_DATABASE: teste
+      MYSQL_DATABASE: testedb
+      PORT: 5000
     ports:
       - "5000:5000"
     depends_on:

@@ -6,24 +6,22 @@ import bcrypt from "bcrypt";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
-// Load environment variables from .env file if present
+// Load environment variables
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
-// MySQL connection setup using environment variables
 const db = mysql.createPool({
-  host: process.env.MYSQL_HOST || "localhost",
-  user: process.env.MYSQL_USER || "your_username",
-  password: process.env.MYSQL_PASSWORD || "your_password",
-  database: process.env.MYSQL_DATABASE || "your_database",
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
-// Validation schema using yup
 const signUpSchema = yup.object().shape({
   nome: yup.string().required().min(10).max(100),
   dataNascimento: yup.date().required().max(new Date()),
@@ -38,18 +36,14 @@ const signUpSchema = yup.object().shape({
     .oneOf([true], "Você deve aceitar os termos de uso"),
 });
 
-// Sign-up route
-app.post("/signup", async (req: Request, res: Response) => {
+app.post("/criar", async (req: Request, res: Response) => {
   try {
-    // Validate the incoming data
     const validData = await signUpSchema.validate(req.body, {
       abortEarly: false,
     });
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(validData.senha, 10);
 
-    // Insert the new user into the database
     const [result] = await db.execute(
       "INSERT INTO users (nome, dataNascimento, nomeMae, senha) VALUES (?, ?, ?, ?)",
       [
@@ -64,7 +58,6 @@ app.post("/signup", async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Cadastro realizado com sucesso!", data: validData });
   } catch (err: any) {
-    // Return validation errors
     res.status(400).json({
       message: "Erro de validação",
       errors: err.errors,
