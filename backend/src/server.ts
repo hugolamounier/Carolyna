@@ -30,7 +30,7 @@ const signUpSchema = yup.object().shape({
     .oneOf([yup.ref("senha"), null], "As senhas não conferem"),
 });
 
-app.post("usuario/criar", async (req: Request, res: Response) => {
+app.post("/usuario/criar", async (req: Request, res: Response) => {
   try {
     const validData = await signUpSchema.validate(req.body, {
       abortEarly: false,
