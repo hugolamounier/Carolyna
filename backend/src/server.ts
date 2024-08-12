@@ -3,11 +3,18 @@ import * as yup from "yup";
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import cors from "cors";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
+app.use(cors({
+  origin: '*', // Allow all origins
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allow all methods
+  allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+}));
 app.use(express.json())
 
 const port = process.env.PORT || 5000;
