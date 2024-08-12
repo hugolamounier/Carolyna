@@ -36,7 +36,7 @@ const signUpSchema = yup.object().shape({
     .oneOf([true], "Você deve aceitar os termos de uso"),
 });
 
-app.post("/criar", async (req: Request, res: Response) => {
+app.post("usuario/criar", async (req: Request, res: Response) => {
   try {
     const validData = await signUpSchema.validate(req.body, {
       abortEarly: false,
